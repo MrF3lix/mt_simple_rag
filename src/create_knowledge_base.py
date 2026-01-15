@@ -67,9 +67,6 @@ def add_paragraph_embeddings(con):
     index = faiss.IndexFlatIP(DIM)
     id_index = faiss.IndexIDMap2(index)
 
-    quantizer = faiss.IndexFlatIP(DIM)
-    index = faiss.IndexIVFFlat(quantizer, DIM, 4096, faiss.METRIC_INNER_PRODUCT)
-
     # Collect total number of paragraphs
     total = con.execute("SELECT count(*) FROM paragraph;").fetchall()[0][0]
     pbar = tqdm(total=total)
@@ -91,7 +88,7 @@ def add_paragraph_embeddings(con):
 def run():
     con = duckdb.connect(SOURCE)
 
-    create_knowledge_base(con)
+    # create_knowledge_base(con)
     add_paragraph_embeddings(con)
 
 run()

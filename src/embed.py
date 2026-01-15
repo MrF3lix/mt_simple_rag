@@ -23,7 +23,7 @@ def embed():
     model = SentenceTransformer("jinaai/jina-embeddings-v3", trust_remote_code=True)
     task = "text-matching"
     embeddings = model.encode(
-        df_p['paragraph'],
+        df_p['paragraph'].to_list(),
         task=task,
         prompt_name=task,
     )

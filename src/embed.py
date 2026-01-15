@@ -1,8 +1,11 @@
+import faiss
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 
 SOURCE = 'data/kilt_wiki_small.jsonl'
-MODEL = 'jinaai/jina-embeddings-v3'
+EMBEDDING_MODEL = 'jinaai/jina-embeddings-v3'
+EMBEDDING_TASK = 'text-matching'
+INDEX = 'data/kilt_wiki_small.index'
 
 
 # TODO: This won't work for a larger dataset!
@@ -14,21 +17,24 @@ def split_pages_to_paragraphs(source):
     idx = pd.MultiIndex.from_tuples(df[cols].values.tolist(), names=cols)
     df_p = pd.DataFrame(df['paragraphs'].tolist(), idx).stack().reset_index(cols, name='paragraph')
     df_p['paragraph_id'] = df_p.index
+    df_p = df_p.reset_index()
 
     return df_p
 
 def embed():
     df_p = split_pages_to_paragraphs(SOURCE)
 
-    model = SentenceTransformer("jinaai/jina-embeddings-v3", trust_remote_code=True)
-    task = "text-matching"
+    model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True)
     embeddings = model.encode(
         df_p['paragraph'].to_list(),
-        task=task,
-        prompt_name=task,
+        task=EMBEDDING_TASK,
+        prompt_name=EMBEDDING_TASK,
     )
 
+    dim = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dim)
+    index.add(embeddings)
 
-    print(embeddings)
+    faiss.write_index(index, INDEX)
 
 embed()

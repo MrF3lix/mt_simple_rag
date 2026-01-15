@@ -1,4 +1,4 @@
-
+import json
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import numpy as np
@@ -24,7 +24,33 @@ def retriev(item, index, k=5):
         prompt_name=task,
     )
 
-    return index.search(np.array([query]), k)
-    
-retriev(df_q.iloc[1], index)
-print('done')
+    d, indices = index.search(np.array([query]), k)
+
+    results = []
+    for i in range(k):
+        distance = d[0][i]
+        index = indices[0][i]
+
+        paragraph = df_p.iloc[index].to_dict()
+        results.append({
+            'kilt_id': paragraph['kilt_id'],
+            'wikipedia_id': paragraph['wikipedia_id'],
+            'wikipedia_title': paragraph['wikipedia_title'],
+            'paragraph_id': paragraph['paragraph_id'],
+            'd': distance.tolist()
+        })
+
+    return results
+
+results = []
+for i, row in df_q.iterrows():
+
+    results.append({
+        'i': i,
+        'id': row['id'],
+        'input': row['input'],
+        'retrieved': retriev(row, index)
+    })
+
+with open('output.json', 'w') as f:
+    json.dump(results, f)

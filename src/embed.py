@@ -38,3 +38,4 @@ def embed():
     faiss.write_index(index, INDEX)
 
 embed()
+print('done')

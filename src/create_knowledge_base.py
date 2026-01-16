@@ -11,7 +11,7 @@ EMBEDDING_MODEL = 'jinaai/jina-embeddings-v3'
 EMBEDDING_TASK = 'text-matching'
 INDEX = 'data/kilt_wiki_small.index'
 
-BATCH_ROWS = 5
+BATCH_ROWS = 512
 DIM = 1024
 
 def create_knowledge_base(con):
@@ -45,7 +45,6 @@ def create_knowledge_base(con):
 
 def embed(batch, model, id_index):
     ids = [r[0] for r in batch]
-    # TODO: Figure out if this is actually just the title or the text
     texts = [r[1] for r in batch]
 
     embeddings = model.encode(

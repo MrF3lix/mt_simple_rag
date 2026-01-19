@@ -33,7 +33,7 @@ class KnowledgeBase():
 
     def init_wiki_table(self):
         relevant_wiki_pages = self.select_subset()
-        if 'subset_size' in self.cfg.documents:
+        if 'use_entire_wiki' in self.cfg.documents and self.cfg.documents.use_entire_wiki == False:
             self.con.execute(f"""
                 ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
                 

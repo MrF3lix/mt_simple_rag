@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --partition=gpu 
 #SBATCH --mem=250G
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:4
 #SBATCH --account=cai_exp
 #SBATCH --mail-user=saaf@zhaw.ch
 #SBATCH --output=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.out

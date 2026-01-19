@@ -33,7 +33,7 @@ class KnowledgeBase():
 
     def init_wiki_table(self):
         relevant_wiki_pages = self.select_subset()
-        if 'use_entire_wiki' in self.cfg.documents and self.cfg.documents.use_entire_wiki == False:
+        if 'use_entire_wiki' in self.cfg.documents.keys() and self.cfg.documents.use_entire_wiki == False:
             self.con.execute(f"""
                 ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
                 
@@ -57,7 +57,7 @@ class KnowledgeBase():
 
         train_clean = kilt_fever['train'].filter(lambda row: (row['output'][0]['answer'] in allowed and len(row['output'][0]['provenance']) > 0))
 
-        if 'subset_size' in self.cfg.documents:
+        if 'subset_size' in self.cfg.documents.keys():
             subset = train_clean.select(range(self.cfg.documents.subset_size))
         else:
             subset = train_clean

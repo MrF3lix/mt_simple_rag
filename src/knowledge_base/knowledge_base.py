@@ -33,23 +33,31 @@ class KnowledgeBase():
 
     def init_wiki_table(self):
         relevant_wiki_pages = self.select_subset()
-        if 'use_entire_wiki' in self.cfg.documents.keys() and self.cfg.documents.use_entire_wiki == False:
-            self.con.execute(f"""
-                ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
+        self.con.execute(f"""
+            ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
+            
+            CREATE TABLE wiki AS
+            SELECT *
+            FROM src.wiki
+            WHERE wikipedia_id in ?;
+        """,  [relevant_wiki_pages])
+        # if 'use_entire_wiki' in self.cfg.documents.keys() and self.cfg.documents.use_entire_wiki == False:
+        #     self.con.execute(f"""
+        #         ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
                 
-                CREATE TABLE wiki AS
-                SELECT *
-                FROM src.wiki
-                WHERE wikipedia_id in ?;
-            """,  [relevant_wiki_pages])
-        else:
-            self.con.execute(f"""
-                ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
+        #         CREATE TABLE wiki AS
+        #         SELECT *
+        #         FROM src.wiki
+        #         WHERE wikipedia_id in ?;
+        #     """,  [relevant_wiki_pages])
+        # else:
+        #     self.con.execute(f"""
+        #         ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
                 
-                CREATE TABLE wiki AS
-                SELECT *
-                FROM src.wiki;
-            """)
+        #         CREATE TABLE wiki AS
+        #         SELECT *
+        #         FROM src.wiki;
+        #     """)
 
     def select_subset(self):
         kilt_fever = load_dataset("kilt_tasks", name="fever")
@@ -57,10 +65,11 @@ class KnowledgeBase():
 
         train_clean = kilt_fever['train'].filter(lambda row: (row['output'][0]['answer'] in allowed and len(row['output'][0]['provenance']) > 0))
 
-        if 'subset_size' in self.cfg.documents.keys():
-            subset = train_clean.select(range(self.cfg.documents.subset_size))
-        else:
-            subset = train_clean
+        subset = train_clean.select(range(self.cfg.documents.subset_size))
+        # if 'subset_size' in self.cfg.documents.keys():
+        #     subset = train_clean.select(range(self.cfg.documents.subset_size))
+        # else:
+        #     subset = train_clean
 
         relevant = subset.map(self.extract_wikipedia_link)
         relevant.to_json(self.cfg.documents.target)

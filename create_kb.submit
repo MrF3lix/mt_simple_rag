@@ -9,8 +9,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --account=cai_exp
 #SBATCH --mail-user=saaf@zhaw.ch
-#SBATCH --output=/cluster/home/saaf/MT/mt_rag-eval/temp/%j_%N.out
-#SBATCH --error=/cluster/home/saaf/MT/mt_rag-eval/temp/%j_%N.err
+#SBATCH --output=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.out
+#SBATCH --error=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.err
 #SBATCH --signal=B:SIGUSR1@60
 
 export UV_PROJECT_ENVIRONEMENT='/raid/persistent_scratch/saaf/venvs/mt_2'

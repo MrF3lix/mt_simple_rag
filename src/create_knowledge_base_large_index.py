@@ -10,9 +10,9 @@ WIKI = f'data/kilt_wiki_{DATASET}.jsonl'
 SOURCE = f'data/kilt_wiki_{DATASET}.duckdb'
 EMBEDDING_MODEL = 'jinaai/jina-embeddings-v3'
 EMBEDDING_TASK = 'text-matching'
-INDEX = f'data/kilt_wiki_{DATASET}.index'
+INDEX = f'data/kilt_wiki_{DATASET}_2.index'
 
-BATCH_ROWS = 512
+BATCH_ROWS = 10
 DIM = 1024
 
 def create_knowledge_base(con):
@@ -54,21 +54,51 @@ def embed(batch, model, id_index):
         prompt_name=EMBEDDING_TASK,
     )
 
-    # TODO: How can the id be ensured here without an id_index?
+    id_index.add(embeddings.astype("float32"))
 
-    id_index.add_with_ids(
-        embeddings.astype("float32"),
-        np.array(ids, dtype="int64")
+    # id_index.add_with_ids(
+    #     embeddings.astype("float32"),
+    #     np.array(ids, dtype="int64")
+    # )
+
+def train_index(training_batch, model, id_index):
+    embeddings = model.encode(
+        training_batch,
+        task=EMBEDDING_TASK,
+        prompt_name=EMBEDDING_TASK,
     )
+        
+    train_vectors = embeddings.astype("float32")
+    id_index.train(train_vectors)
 
 def add_paragraph_embeddings(con):
     con = duckdb.connect(SOURCE)
 
     model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True)
     # TODO: Maybe switch to another index?
-    index = faiss.IndexFlatIP(DIM)
-    id_index = faiss.IndexIDMap2(index)
+    # index = faiss.IndexFlatIP(DIM)
 
+    # DIM = 1024
+    # N_LISTS = 4096
+    # M = 64
+    # BITS = 8
+
+    # quantizer = faiss.IndexFlatIP(DIM)
+    # index = faiss.IndexIVFPQ(
+    #     quantizer,
+    #     DIM,
+    #     N_LISTS,
+    #     M,
+    #     BITS
+    # )
+
+    index = faiss.IndexHNSWFlat(DIM, 32, faiss.METRIC_INNER_PRODUCT)
+
+    # print('Start Training')
+    # training_rows = con.execute("SELECT global_id, text FROM paragraph LIMIT 4096").fetchall()
+    # train_index(training_rows, model, index)
+
+    # print('Finished Training')
     total = con.execute("SELECT count(*) FROM paragraph;").fetchall()[0][0]
     pbar = tqdm(total=total)
     cursor = con.execute("SELECT global_id, text FROM paragraph")
@@ -77,10 +107,9 @@ def add_paragraph_embeddings(con):
         if not rows:
             break
 
-        embed(rows, model, id_index)
+        embed(rows, model, index)
         pbar.update(BATCH_ROWS)
 
-    # TODO: This is terrible! When saving the id_index i get a memory leak during index search
     faiss.write_index(index, INDEX)
 
 def run():

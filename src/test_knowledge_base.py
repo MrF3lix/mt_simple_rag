@@ -55,7 +55,7 @@ def extract_wikipedia_link(row):
 
 def test():
     df_q = pd.read_json(QUESTIONS, lines=True)
-    model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True, device='mps')
+    model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True)
     index = faiss.read_index(INDEX)
     con = duckdb.connect(SOURCE)
 

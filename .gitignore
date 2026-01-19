@@ -1,3 +1,6 @@
 .DS_Store
+__pycache__
+/results
 **/*.index
 **/*.duckdb
+**/*.jsonl

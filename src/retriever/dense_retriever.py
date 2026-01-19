@@ -1,33 +1,29 @@
 from sentence_transformers import SentenceTransformer
-from retriever import BaseRetriever, TestCase
 import numpy as np
 import faiss
 import duckdb
 
-EMBEDDING_MODEL = 'jinaai/jina-embeddings-v3'
-EMBEDDING_TASK = 'retrieval.query'
-INDEX = 'data/kilt_wiki_small.index'
-SOURCE = 'data/kilt_wiki_small.duckdb'
-K = 5
+from .base_retriever import BaseRetriever
+from .query import Paragraph
 
 class DenseRetriever(BaseRetriever):
 
-    def __init__(self):
+    def __init__(self, cfg):
         super().__init__()
 
-        self.model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True)
-        self.index = faiss.read_index(INDEX)
-        self.con = duckdb.connect(SOURCE)
+        self.cfg = cfg
+        self.model = SentenceTransformer(cfg.embedder.model, trust_remote_code=True)
+        self.index = faiss.read_index(cfg.index.name)
+        self.con = duckdb.connect(cfg.knowledge_base.target)
 
-    def retriev(self, case: TestCase) -> TestCase:
-        task = EMBEDDING_TASK
+    def retriev(self, query: str) -> list[Paragraph]:
         query = self.model.encode(
-            case.query,
-            task=task,
-            prompt_name=task,
+            query,
+            task=self.cfg.embedder.query_task,
+            prompt_name=self.cfg.embedder.query_task,
         )
 
-        distances, indices = self.index.search(np.array([query]), K)
+        distances, indices = self.index.search(np.array([query]), self.cfg.retriever.k)
 
         # TODO: Why???
         indices = indices+1
@@ -41,5 +37,10 @@ class DenseRetriever(BaseRetriever):
         result['d'] = distances[0]
         # print(distances) # TODO: Find out why the distance is always the same? is this related to the index type?
 
-        # TODO: Change to TestCase type
-        return result
+        result = result.to_dict(orient='records')
+
+        return list(map(lambda r: Paragraph(
+            document_id=r['wikipedia_id'],
+            index=r['index'],
+            text=r['text'],
+        ), result))

@@ -1,5 +1,7 @@
-from retriever import BaseRetriever, TestCase
 import duckdb
+
+from .base_retriever import BaseRetriever
+from .query import Paragraph
 
 SOURCE = 'data/kilt_wiki_small.duckdb'
 
@@ -9,7 +11,7 @@ class OracleRetriever(BaseRetriever):
 
         self.con = duckdb.connect(SOURCE)
 
-    def retriev(self, case: TestCase) -> TestCase:
+    def retriev(self, case: dict) -> list[Paragraph]:
         reference_global_id = list(map(lambda p: p.global_id,case.references))
 
         query = f"""

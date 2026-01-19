@@ -1,23 +1,27 @@
 # Simple RAG
 
 
+## Questions
+
+- [ ] How does the number of indexed paragraphs influence the performance?
+
+
 ## TODO
 
 - [X] Create small version of KILT Fever
 - [X] Extract all paragraphs from the smaller version of the dataset
 - [X] Embedd all paragraphs
 - [X] Create faiss index from embeddings
-- [ ] Test different indices => >1M Paragraphs
-- [ ] Fix Saving/Loading the ID Index then run it again on the Cluster => Needs a lot of memory!
+- [X] Test different indices => >1M Paragraphs
+- [X] Fix Saving/Loading the ID Index then run it again on the Cluster => Needs a lot of memory!
+- [ ] Cleanup unused scripts
+- [ ] Add Generator to complete RAG Pipeline
 
-
-- [ ] Add Config files
+- [X] Add Config files
 - [ ] Add API Endpoint (Query, Eval)
 - [ ] Define Deployment (e.g. What is needed? Code, KB, Index, ...)
 - [ ] Define How to package the RAG and Run it?
 - [ ] Create larger index
-
-
 
 
 - How to go from the retrieved index id to the paragraph and wiki page?

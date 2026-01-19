@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --time=1440
+#SBATCH --job-name=rag_eval_kb_init
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=20
+#SBATCH --nodes=1
+#SBATCH --partition=gpu 
+#SBATCH --mem=250G
+#SBATCH --gres=gpu:1
+#SBATCH --account=cai_exp
+#SBATCH --mail-user=saaf@zhaw.ch
+#SBATCH --output=/cluster/home/saaf/MT/mt_rag-eval/temp/%j_%N.out
+#SBATCH --error=/cluster/home/saaf/MT/mt_rag-eval/temp/%j_%N.err
+#SBATCH --signal=B:SIGUSR1@60
+
+export UV_PROJECT_ENVIRONEMENT='/raid/persistent_scratch/saaf/venvs/mt_2'
+export UV_LINK_MODE=copy
+
+while getopts ":c:" opt; do
+  case $opt in
+    c)
+      config="$OPTARG"
+      ;;
+  esac
+done
+
+uv sync
+uv run ./src/init.py --config "$config"
+uv run ./src/test.py --config "$config"

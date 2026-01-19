@@ -1,0 +1,17 @@
+documents:
+  subset_size: 10000
+  target: data/kilt_fever_train.jsonl
+knowledge_base:
+  wiki_source: data/wikipedia_kilt.duckdb
+  target: data/kilt_wiki.duckdb
+embedder:
+  model: jinaai/jina-embeddings-v3
+  task: text-matching
+  query_task: retrieval.query
+index:
+  name: data/kilt_wiki.index
+  dim: 1024
+  batch_size: 256
+retriever:
+  k: 5
+  

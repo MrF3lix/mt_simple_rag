@@ -6,7 +6,7 @@ import duckdb
 from .base_retriever import BaseRetriever
 from .query import Paragraph, Query
 
-class DenseRetriever(BaseRetriever):
+class SimilarRetriever(BaseRetriever):
 
     def __init__(self, cfg):
         super().__init__()
@@ -17,13 +17,16 @@ class DenseRetriever(BaseRetriever):
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def retriev(self, query: Query) -> Query:
+        multiplier = 2
+        reference_paragraphs = list(map(lambda p: p.index, query.references))
+
         query_embedding = self.model.encode(
             query.input,
             task=self.cfg.embedder.query_task,
             prompt_name=self.cfg.embedder.query_task,
         )
 
-        distances, indices = self.index.search(np.array([query_embedding]), self.cfg.retriever.k)
+        distances, indices = self.index.search(np.array([query_embedding]), self.cfg.retriever.k * multiplier)
         indices = indices+1 # Indices in duckdb start at 1 while indices in the faiss index start at 0
 
         result = self.con.execute("""
@@ -31,9 +34,10 @@ class DenseRetriever(BaseRetriever):
             FROM paragraph
             WHERE global_id IN ({})
             """.format(",".join(map(str, indices[0])))).df()
-
         result['d'] = distances[0]
-        # TODO: Find out why the distance is always the same? is this related to the index type?
+
+        # TODO: Check if results contain the correct paragraph => Remove the reference paragraphs and return the top 5
+        result = result.loc[~result['index'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
 
         result = result.to_dict(orient='records')
 

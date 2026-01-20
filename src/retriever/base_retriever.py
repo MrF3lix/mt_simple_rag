@@ -1,22 +1,22 @@
 from abc import ABC, abstractmethod
-from .query import Paragraph
+from .query import Query
  
 class BaseRetriever(ABC):
     """Abstract Class for the retriever strategies"""
 
     @abstractmethod
-    def retriev(self, query: str) -> list[Paragraph]:
+    def retriev(self, query: Query) -> Query:
         """Executes the quantification method
 
         Parameters
         ---
-        query : str
-            used to search the index
+        query : Query
+            Uses the input of the query to search the index
 
         Returns
         ---
-        Paragraph
-            list of retrieved paragraphs.
+        Query
+            Returns the query with a set list of retrieved paragraphs
         
         """
         pass

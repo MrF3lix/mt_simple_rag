@@ -2,6 +2,7 @@ from openai import OpenAI
 import logging
 
 from generator import BaseGenerator
+from retriever import Query, Paragraph
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -23,28 +24,25 @@ class Generator(BaseGenerator):
             }
         ]
 
-    def format_documents(self, document: dict) -> str:
-        return f"<document><source>{document['id']}</source>{document['text']}</document>"
+    def format_documents(self, paragraph: Paragraph) -> str:
+        return f"<document><source>{paragraph.document_id}, {paragraph.index}</source>{paragraph.text}</document>"
     
-    def build_user_query(self, claim: str, documents: list[dict]):
+    def build_user_query(self, input: str, documents: list[Paragraph]):
         content = f"""
             Retrieved passages:
             {"\n".join(self.format_documents(p) for p in documents)}
             User Question:
-            {claim}
+            {input}
             """
         return {
             "role": "user",
             "content": content
         }
     
-    def generate(self, row):
+    def generate(self, query: Query) -> Query:
         client = OpenAI(base_url=self.cfg.generator.base_url, api_key="dummy-key")
 
-        question = row['question']
-        context = row['context']
-
-        request = self.build_user_query(question, context)
+        request = self.build_user_query(query.input, query.retrieved)
 
         response = client.chat.completions.create(
             model=self.cfg.generator.model,
@@ -53,7 +51,6 @@ class Generator(BaseGenerator):
             max_tokens=self.cfg.generator.max_tokens
         )
 
-        return {
-            **row,
-            'generated_answer': response.choices[0].message.content
-        }
+        query.generated_answer = response.choices[0].message.content
+
+        return query

@@ -6,7 +6,8 @@ from tqdm import tqdm
 from omegaconf import OmegaConf
 from datetime import datetime
 
-from retriever import DenseRetriever, Query, Paragraph
+from retriever import DenseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
+from generator import Generator
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -29,7 +30,19 @@ def main():
     with open(f"{report_path}/config.yaml", 'w') as f:
         OmegaConf.save(cfg, f)
 
-    retriever = DenseRetriever(cfg)
+
+    results = run_test_queries(cfg)
+
+    logger.debug(f'Number of Test Queries:      {len(results)}')
+    logger.debug(f'Correct Documents:           {results['correct_document'].sum() / len(results)}')
+    logger.debug(f'Correct Paragraph:           {results['correct_paragraph'].sum() / len(results)}')
+    logger.debug(f'Correct Answer:              {results['correct_answer'].sum() / len(results)}')
+
+    results.to_json(f'{report_path}/results.json', orient='records')
+
+def run_test_queries(cfg):
+    retriever = load_retriever(cfg)
+    generator = Generator(cfg)
 
     df_q = pd.read_json(cfg.documents.target, lines=True)
     results = []
@@ -37,19 +50,29 @@ def main():
         query = Query(
             id = row['id'],
             input=row['input'],
-            references=extract_wikipedia_link(row),
-            retrieved=retriever.retriev(row['input'])
+            answer=extract_answer(row),
+            references=extract_wikipedia_link(row)
         )
+
+        query = retriever.retriev(query)
+        query = generator.generate(query)
 
         results.append(query.compute_result())
 
-    results = pd.DataFrame(results)
+    return pd.DataFrame(results)
 
-    logger.debug(f'Number of Test Queries:      {len(results)}')
-    logger.debug(f'Correct Documents:           {results['correct_document'].sum() / len(results)}')
-    logger.debug(f'Correct Paragraph:           {results['correct_paragraph'].sum() / len(results)}')
+def load_retriever(cfg):
+    if cfg.retriever.strategy == 'random':
+        return RandomRetriever(cfg)
+    elif cfg.retriever.strategy == 'similar':
+        return SimilarRetriever(cfg)
+    elif cfg.retriever.strategy == 'oracle':
+        return OracleRetriever(cfg)
 
-    results.to_json(f'{report_path}/results.json', orient='records')
+    return DenseRetriever(cfg)
+
+def extract_answer(row) -> str:
+    return row['output'][0]['answer']
 
 def extract_wikipedia_link(row) -> list[Paragraph]:
     paragraphs = []

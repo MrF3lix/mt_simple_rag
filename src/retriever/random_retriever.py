@@ -3,22 +3,22 @@ import duckdb
 from .base_retriever import BaseRetriever
 from .query import Paragraph, Query
 
-class OracleRetriever(BaseRetriever):
+class RandomRetriever(BaseRetriever):
     def __init__(self, cfg):
         super().__init__()
 
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def retriev(self, query: Query) -> Query:
-        document_id = query.references[0].document_id
-        reference_paragraphs = list(map(lambda p: p.index, query.references))
+        reference_documents = list(map(lambda p: p.document_id, query.references))
 
         result = self.con.execute(f"""
             SELECT *
             FROM paragraph
-            WHERE wikipedia_id = '{document_id}' AND index IN ({','.join(['?']*len(reference_paragraphs))})
-        """, reference_paragraphs).df()
-        result['d'] = 0
+            WHERE wikipedia_id NOT IN ({','.join(['?']*len(reference_documents))})
+            USING SAMPLE 5;
+        """, reference_documents).df()
+
         result = result.to_dict(orient='records')
 
         query.retrieved = list(map(lambda r: Paragraph(

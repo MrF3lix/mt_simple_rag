@@ -71,10 +71,11 @@ class KnowledgeBase():
         # else:
         #     subset = train_clean
 
+        # TODO: This only extracts the first wikipedia_id
         relevant = subset.map(self.extract_wikipedia_link)
         relevant.to_json(self.cfg.documents.target)
 
-        return relevant['wikipedia_id'][0:-1]
+        return list(relevant['wikipedia_id'])
 
     def extract_wikipedia_link(sef, row):
         item = row['output'][0]['provenance'][0]

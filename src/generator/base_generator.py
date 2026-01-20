@@ -1,23 +1,23 @@
 from abc import ABC, abstractmethod
-from retriever import TestCase
+from retriever import Query
 
 
 class BaseGenerator(ABC):
     """Abstract Class for the generator strategies"""
 
     @abstractmethod
-    def generate(self, case: TestCase) -> TestCase:
+    def generate(self, query: Query) -> Query:
         """Executes the generate method
 
         Parameters
         ---
-        case : TestCase
-            Test case containing the query, collected paragraph references
+        query : Query
+            Query containing the input statement and the retrieved paragraphs.
 
         Returns
         ---
-        TestCase
-            Test case with a generated answer based on the collected paragraphs.
+        Query
+            Query with the addition of the generated answer.
         
         """
         pass

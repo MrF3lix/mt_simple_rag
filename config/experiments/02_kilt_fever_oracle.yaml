@@ -1,0 +1,23 @@
+documents:
+  subset_size: 10
+  target: results/2026-01-20_00-46/kilt_fever_train.jsonl
+knowledge_base:
+  target: results/2026-01-20_00-46/kilt_wiki.duckdb
+embedder:
+  model: jinaai/jina-embeddings-v3
+  query_task: retrieval.query
+index:
+  name: results/2026-01-20_00-46/kilt_wiki.index
+retriever:
+  k: 5
+  strategy: 'oracle'
+generator:
+  model: google/gemma-3-12b-it
+  base_url: http://trinity.zhaw.ch:8651/v1
+  temperature: 0.7
+  max_tokens: 512
+  system_prompt: >
+    You are a master fact checker.
+    From given passages and a claim you can say whether the claim is SUPPORTS, REFUTES.
+    If the passages do not provide a clear answer you need to say "NOT ENOUGH INFO".
+    Only answer with one of the given labels: SUPPORTS, REFUTES, NOT ENOUGH INFO.

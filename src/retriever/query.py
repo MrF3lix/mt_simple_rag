@@ -48,5 +48,6 @@ class Query():
             'generated_answer': self.generated_answer,
             'correct_document': self.retrieved_correct_page(),
             'correct_paragraph': self.retrieved_correct_paragraph(),
-            'correct_answer': self.generated_answer_correct()
+            'correct_answer': self.generated_answer_correct(),
+            'correct_query': True # TODO: Adjust once we have another dataset
         }

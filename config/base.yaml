@@ -1,21 +1,21 @@
 documents:
-  subset_size: 10
-  target: data/kilt_fever_train.jsonl
+  subset_size: 100
+  target: data/100/kilt_fever_train.jsonl
 knowledge_base:
   wiki_source: data/wikipedia_kilt.duckdb
-  target: data/kilt_wiki.duckdb
+  target: data/100/kilt_wiki.duckdb
   use_entire_wiki: False
 embedder:
   model: jinaai/jina-embeddings-v3
   task: text-matching
   query_task: retrieval.query
 index:
-  name: data/kilt_wiki.index
+  name: data/100/kilt_wiki.index
   dim: 1024
   batch_size: 25
 retriever:
   k: 5
-  strategy: 'similar'
+  strategy: 'dense'
 generator:
   model: google/gemma-3-12b-it
   base_url: http://trinity.zhaw.ch:8651/v1

@@ -1,26 +1,30 @@
 from dataclasses import dataclass
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
-@dataclass(frozen=True)
-class Paragraph:
+class Paragraph(BaseModel):
     document_id: int
     index: int
-    global_id: int = None
-    text: str = None
+    global_id: Optional[int] = None
+    text: Optional[str] = None
 
-class Query():
+class Query(BaseModel):
+    model_config = ConfigDict(strict=True)
     id: str
     input: str
-    answer: str
-    references: list[Paragraph]
-    retrieved: list[Paragraph]
-    generated_answer: str = None
+    answer: Optional[str] = None
+    generated_answer: Optional[str] = None
+    references: list[Paragraph] = []
+    retrieved: list[Paragraph] = []
 
-    def __init__(self, id, input, references, retrieved = [], answer = None):
-        self.id = id
-        self.input = input
-        self.answer = answer
-        self.references = references
-        self.retrieved = retrieved
+    # def __init__(self, id, input, references, retrieved = [], answer = None, generated_answer = None):
+    #     super().__init__()
+    #     self.id = id
+    #     self.input = input
+    #     self.answer = answer
+    #     self.references = references
+    #     self.retrieved = retrieved
+    #     self.generated_answer = generated_answer
 
     def retrieved_correct_page(self):
         reference_page_ids = [r.document_id for r in self.references]

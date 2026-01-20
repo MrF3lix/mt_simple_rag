@@ -30,7 +30,6 @@ def main():
     with open(f"{report_path}/config.yaml", 'w') as f:
         OmegaConf.save(cfg, f)
 
-
     results = run_test_queries(cfg)
 
     logger.debug(f'Number of Test Queries:      {len(results)}')
@@ -48,10 +47,12 @@ def run_test_queries(cfg):
     results = []
     for _, row in tqdm(df_q.iterrows(), total=df_q.shape[0]):
         query = Query(
-            id = row['id'],
-            input=row['input'],
-            answer=extract_answer(row),
-            references=extract_wikipedia_link(row)
+            id = str(row['id']),
+            input = str(row['input']),
+            answer = extract_answer(row),
+            generated_answer = None,
+            references = extract_wikipedia_link(row),
+            retrieved = []
         )
 
         query = retriever.retriev(query)

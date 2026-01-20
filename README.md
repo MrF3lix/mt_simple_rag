@@ -31,11 +31,16 @@
 
 ## Process
 
-1. Load kilt dataset from huggingface
-2. Select subset of fever benchmark => QUERY DATASET
-3. Select all relevant wikipages from subset
-4. Initialize duckdb with relevant wikipages and paragraphs
-5. Run embedding model (batched) => KNOWLEDGE BASE
-6. Run the LLM => vLLM Endpoint
-7. Run the RAG API endpoint => RAG Endpoint
-8. Run the Evaluation Pipeline
+1. Load kilt wikipedia from huggingface
+2. Load dataset into a duckdb
+3. Init Knowledge Base
+   1. Load kilt dataset from huggingface
+   2. Select subset of fever benchmark => QUERY DATASET
+   3. Select all relevant wikipages from subset
+   4. Initialize duckdb with relevant wikipages and paragraphs
+   5. Run embedding model (batched) => KNOWLEDGE BASE
+4. Test Knowledge Base
+   1. Load Embedding Index
+5. Run the LLM => vLLM Endpoint
+6.  Run the RAG API endpoint => RAG Endpoint
+7.  Run the Evaluation Pipeline

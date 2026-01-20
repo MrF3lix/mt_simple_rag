@@ -14,14 +14,25 @@
 - [X] Create faiss index from embeddings
 - [X] Test different indices => >1M Paragraphs
 - [X] Fix Saving/Loading the ID Index then run it again on the Cluster => Needs a lot of memory!
-- [ ] Cleanup unused scripts
-- [ ] Add Generator to complete RAG Pipeline
+- [X] Cleanup unused scripts
+- [X] Add Generator to complete RAG Pipeline
+- [X] Add 10_000 query index (>200k paragraphs, 2k pages)
 
 - [X] Add Config files
-- [ ] Add API Endpoint (Query, Eval)
+- [X] Add API Endpoint (Query, Eval)
 - [ ] Define Deployment (e.g. What is needed? Code, KB, Index, ...)
 - [ ] Define How to package the RAG and Run it?
 - [ ] Create larger index
+
+
+
+Next Steps
+- [ ] Common Input File Structure (Usable For multiple Tasks)
+- [ ] Fix unseen experiment
+- [ ] Index Entire Wiki
+- [ ] Sparse Index => BM25
+- [ ] Use Compendium Dataset
+
 
 
 - How to go from the retrieved index id to the paragraph and wiki page?

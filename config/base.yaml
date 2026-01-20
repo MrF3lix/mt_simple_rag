@@ -1,16 +1,16 @@
 documents:
-  subset_size: 100
-  target: data/100/kilt_fever_train.jsonl
+  subset_size: 10
+  target: data/10/kilt_fever_train.jsonl
 knowledge_base:
   wiki_source: data/wikipedia_kilt.duckdb
-  target: data/100/kilt_wiki.duckdb
-  use_entire_wiki: False
+  target: data/10/kilt_wiki.duckdb
+  use_subset: True
 embedder:
   model: jinaai/jina-embeddings-v3
   task: text-matching
   query_task: retrieval.query
 index:
-  name: data/100/kilt_wiki.index
+  name: data/10/kilt_wiki.index
   dim: 1024
   batch_size: 25
 retriever:

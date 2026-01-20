@@ -1,5 +1,4 @@
 documents:
-  subset_size: 10
   target: results/2026-01-20_00-46/kilt_fever_train.jsonl
 knowledge_base:
   target: results/2026-01-20_00-46/kilt_wiki.duckdb

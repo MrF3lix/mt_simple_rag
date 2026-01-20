@@ -14,9 +14,9 @@ class DenseRetriever(BaseRetriever):
         self.cfg = cfg
         self.model = SentenceTransformer(cfg.embedder.model, trust_remote_code=True)
         self.index = faiss.read_index(cfg.index.name)
-        self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def retriev(self, query: Query) -> Query:
+        self.con = duckdb.connect(self.cfg.knowledge_base.target)
         query_embedding = self.model.encode(
             query.input,
             task=self.cfg.embedder.query_task,
@@ -43,6 +43,8 @@ class DenseRetriever(BaseRetriever):
             index=r['index'],
             text=r['text'],
         ), result))
+
+        self.con.close()
 
         return query
         

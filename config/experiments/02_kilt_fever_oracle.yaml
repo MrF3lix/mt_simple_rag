@@ -1,12 +1,12 @@
 documents:
-  target: results/2026-01-20_00-46/kilt_fever_train.jsonl
+  target: data/02_oracle/kilt_fever_train.jsonl
 knowledge_base:
-  target: results/2026-01-20_00-46/kilt_wiki.duckdb
+  target: data/02_oracle/kilt_wiki.duckdb
 embedder:
   model: jinaai/jina-embeddings-v3
   query_task: retrieval.query
 index:
-  name: results/2026-01-20_00-46/kilt_wiki.index
+  name: data/02_oracle/kilt_wiki.index
 retriever:
   k: 5
   strategy: 'oracle'

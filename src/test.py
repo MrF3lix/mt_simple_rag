@@ -6,7 +6,7 @@ from tqdm import tqdm
 from omegaconf import OmegaConf
 from datetime import datetime
 
-from retriever import DenseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
+from retriever import DenseRetriever, SparseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
 from generator import Generator
 
 logger = logging.getLogger(__name__)
@@ -56,8 +56,8 @@ def run_test_queries(cfg):
         )
 
         query = retriever.retriev(query)
-        query = generator.generate(query)
-
+        # query = generator.generate(query)
+# 
         results.append(query.compute_result())
 
     return pd.DataFrame(results)
@@ -69,6 +69,8 @@ def load_retriever(cfg):
         return SimilarRetriever(cfg)
     elif cfg.retriever.strategy == 'oracle':
         return OracleRetriever(cfg)
+    elif cfg.retriever.strategy == 'sparse':
+        return SparseRetriever(cfg)
 
     return DenseRetriever(cfg)
 

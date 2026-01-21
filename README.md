@@ -33,6 +33,8 @@ Next Steps
 - [ ] Sparse Index => BM25
 - [ ] Use Compendium Dataset
 
+- [ ] Add Simple Statistics (Count per Label)
+
 
 
 - How to go from the retrieved index id to the paragraph and wiki page?

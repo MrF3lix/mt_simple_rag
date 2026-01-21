@@ -1,13 +1,15 @@
 from sentence_transformers import SentenceTransformer
 from faiss import IndexHNSWFlat, write_index, METRIC_INNER_PRODUCT
 
-class Embedder():
+from .base_index import BaseIndex
+
+class DenseIndex(BaseIndex):
     def __init__(self, cfg):
         self.cfg = cfg
         self.model = SentenceTransformer(cfg.embedder.model, trust_remote_code=True)
         self.index = IndexHNSWFlat(cfg.index.dim, 32, METRIC_INNER_PRODUCT)
 
-    def embed_paragraphs(self, batch):
+    def add_paragraphs(self, batch):
         texts = [r[1] for r in batch]
 
         embeddings = self.model.encode(

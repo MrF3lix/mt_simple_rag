@@ -1,13 +1,13 @@
 import duckdb
-import pyarrow.parquet as pq
 from datasets import load_dataset
 from tqdm import tqdm
-from . import Embedder
+
+from index import DenseIndex, SparseIndex
 
 class KnowledgeBase():
     def __init__(self, cfg):
         self.cfg = cfg
-        self.embedder = Embedder(cfg)
+        self.index = DenseIndex(cfg) if cfg.index.type == 'dense' else SparseIndex(cfg)
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def init_database(self):
@@ -87,7 +87,7 @@ class KnowledgeBase():
             if not rows:
                 break
 
-            self.embedder.embed_paragraphs(rows)
+            self.index.add_paragraphs(rows)
             pbar.update(self.cfg.index.batch_size)
 
-        self.embedder.save_index()
+        self.index.save_index()

@@ -25,8 +25,7 @@ def get_success_rate(col):
     return divide(tp, (tp + fn))
 
 class Simulate():
-    def __init__(self, cfg):
-        self.cfg = cfg
+    def __init__(self):
         pass
 
     def load_conditionals(self, df):

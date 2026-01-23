@@ -11,7 +11,6 @@ class OracleRetriever(BaseRetriever):
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def retriev(self, query: Query) -> Query:
-        document_id = query.references[0].document_id
         reference_paragraphs = list(map(lambda p: p.index, query.references))
 
         # TODO: Cleanup with common datastructure
@@ -22,6 +21,7 @@ class OracleRetriever(BaseRetriever):
                 WHERE global_id IN ({','.join(['?']*len(reference_paragraphs))})
             """, reference_paragraphs).df()
         else:
+            document_id = query.references[0].document_id
 
             result = self.con.execute(f"""
                 SELECT *

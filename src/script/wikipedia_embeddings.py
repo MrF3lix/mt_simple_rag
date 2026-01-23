@@ -7,7 +7,7 @@ EMBEDDER_MODEL = 'jinaai/jina-embeddings-v3'
 EMBEDDER_TASK = 'text-matching'
 TARGET_DB = 'data/all.duckdb'
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 100
 OUTPUT_FILE = "data/embeddings.jsonl"
 
 def append_embeddings(results):

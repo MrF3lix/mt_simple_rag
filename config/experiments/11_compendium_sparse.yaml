@@ -1,14 +1,14 @@
 documents:
-  target: data/compendium/10/compendium_train.jsonl
+  target: data/compendium/all/compendium_train.jsonl
 knowledge_base:
   dataset: catechism
-  target: data/compendium/10/catechism_kb.duckdb
+  target: data/compendium/all/catechism_kb.duckdb
 embedder:
   model: jinaai/jina-embeddings-v3
   query_task: retrieval.query
 index:
   type: sparse
-  name: data/compendium/10/compendium_sparse
+  name: data/compendium/all/compendium_sparse
 retriever:
   k: 5
   strategy: sparse

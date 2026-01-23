@@ -2,10 +2,9 @@
 __pycache__
 /results
 /temp
-**/compendium
+**/validation
 **/*.index
 **/*.duckdb
-**/*.jsonl
 **/*.wal
 **/*.tmp
 **/*.npz

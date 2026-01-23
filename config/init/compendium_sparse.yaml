@@ -1,12 +1,11 @@
 documents:
-  subset_size: 10
   source: data/compendium/compendium_english.json
-  target: data/compendium/10/compendium_train.jsonl
+  target: data/compendium/all/compendium_train.jsonl
 knowledge_base:
   dataset: catechism
   source: data/compendium/catechism_english.jsonl
-  target: data/compendium/10/catechism_kb.duckdb
-  use_subset: True
+  target: data/compendium/all/catechism_kb.duckdb
+  use_subset: False
 embedder:
   model: jinaai/jina-embeddings-v3
   task: text-matching
@@ -14,5 +13,5 @@ embedder:
 index:
   batch_size: 25
   type: sparse
-  name: data/compendium/10/compendium_sparse
+  name: data/compendium/all/compendium_sparse
   temp_file: data/compendium/paragraphs.jsonl

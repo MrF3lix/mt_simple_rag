@@ -56,8 +56,8 @@ def run_test_queries(cfg):
         )
 
         query = retriever.retriev(query)
-        # query = generator.generate(query)
-# 
+        query = generator.generate(query)
+
         results.append(query.compute_result())
 
     return pd.DataFrame(results)

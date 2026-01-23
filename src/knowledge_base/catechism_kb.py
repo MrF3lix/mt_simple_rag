@@ -27,7 +27,8 @@ class CatechismKnowledgeBase(KnowledgeBase):
 
     def select_subset(self):
         df = pd.read_json(self.cfg.documents.source, lines=False)
-        df = df.sample(self.cfg.documents.subset_size)
+        if 'subset_size' in self.cfg.documents:
+            df = df.sample(self.cfg.documents.subset_size)
 
         df['id'] = df['num']
         df['input'] = df['question']

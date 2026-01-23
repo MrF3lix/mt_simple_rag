@@ -15,6 +15,9 @@ class OracleRetriever(BaseRetriever):
 
         # TODO: Cleanup with common datastructure
         if 'dataset' in self.cfg.knowledge_base and self.cfg.knowledge_base.dataset == 'catechism':
+            if len(reference_paragraphs) == 0:
+                print(query)
+
             result = self.con.execute(f"""
                 SELECT *
                 FROM paragraph

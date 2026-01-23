@@ -2,6 +2,7 @@
 __pycache__
 /results
 /temp
+**/compendium
 **/*.index
 **/*.duckdb
 **/*.jsonl

@@ -2,9 +2,10 @@ import duckdb
 from datasets import load_dataset
 from tqdm import tqdm
 
+from .base_kb import KnowledgeBase
 from index import DenseIndex, SparseIndex
 
-class KnowledgeBase():
+class WikiKnowledgeBase(KnowledgeBase):
     def __init__(self, cfg):
         self.cfg = cfg
         self.index = DenseIndex(cfg) if cfg.index.type == 'dense' else SparseIndex(cfg)
@@ -36,7 +37,7 @@ class KnowledgeBase():
 
         if 'use_subset' in self.cfg.knowledge_base.keys() and self.cfg.knowledge_base.use_subset == True:
             self.con.execute(f"""
-                ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
+                ATTACH '{self.cfg.knowledge_base.source}' AS src;
                 
                 CREATE TABLE wiki AS
                 SELECT *
@@ -45,7 +46,7 @@ class KnowledgeBase():
             """,  [relevant_wiki_pages])
         else:
             self.con.execute(f"""
-                ATTACH '{self.cfg.knowledge_base.wiki_source}' AS src;
+                ATTACH '{self.cfg.knowledge_base.source}' AS src;
                 
                 CREATE TABLE wiki AS
                 SELECT *

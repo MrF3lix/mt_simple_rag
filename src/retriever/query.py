@@ -14,17 +14,10 @@ class Query(BaseModel):
     input: str
     answer: Optional[str] = None
     generated_answer: Optional[str] = None
+    use_llm_judge: bool = False
+    is_answer_correct: Optional[bool] = None
     references: list[Paragraph] = []
     retrieved: list[Paragraph] = []
-
-    # def __init__(self, id, input, references, retrieved = [], answer = None, generated_answer = None):
-    #     super().__init__()
-    #     self.id = id
-    #     self.input = input
-    #     self.answer = answer
-    #     self.references = references
-    #     self.retrieved = retrieved
-    #     self.generated_answer = generated_answer
 
     def retrieved_correct_page(self):
         reference_page_ids = [r.document_id for r in self.references]
@@ -39,15 +32,15 @@ class Query(BaseModel):
         return bool(set(reference_paragraphs_ids) & set(retrieved_paragraphs_ids))
     
     def generated_answer_correct(self):
-        return self.answer == self.generated_answer
+        return self.is_answer_correct if self.use_llm_judge else self.answer == self.generated_answer
 
 
     def compute_result(self):
         return {
             'id': self.id,
             'input': self.input,
-            'reference': self.references,
-            'retrieved': self.retrieved,
+            'reference': list(map(lambda r: r.model_dump(), self.references)),
+            'retrieved': list(map(lambda r: r.model_dump(), self.retrieved)),
             'answer': self.answer,
             'generated_answer': self.generated_answer,
             'correct_document': self.retrieved_correct_page(),

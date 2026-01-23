@@ -2,7 +2,7 @@ documents:
   subset_size: 10
   target: data/10/kilt_fever_train.jsonl
 knowledge_base:
-  wiki_source: data/wikipedia_kilt.duckdb
+  source: data/wikipedia_kilt.duckdb
   target: data/10/kilt_wiki.duckdb
   use_subset: True
 embedder:

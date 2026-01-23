@@ -7,7 +7,7 @@ from omegaconf import OmegaConf
 from datetime import datetime
 
 from retriever import DenseRetriever, SparseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
-from generator import Generator
+from generator import Generator, Judge
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -43,20 +43,26 @@ def run_test_queries(cfg):
     retriever = load_retriever(cfg)
     generator = Generator(cfg)
 
+    if 'judge' in cfg:
+        judge = Judge(cfg)
+
     df_q = pd.read_json(cfg.documents.target, lines=True)
     results = []
     for _, row in tqdm(df_q.iterrows(), total=df_q.shape[0]):
         query = Query(
             id = str(row['id']),
             input = str(row['input']),
-            answer = extract_answer(row),
+            answer = extract_answer(row, cfg),
             generated_answer = None,
-            references = extract_wikipedia_link(row),
+            references = extract_references(row, cfg),
             retrieved = []
         )
 
         query = retriever.retriev(query)
         query = generator.generate(query)
+
+        if 'judge' in cfg:
+            query = judge.eval(query)
 
         results.append(query.compute_result())
 
@@ -74,10 +80,26 @@ def load_retriever(cfg):
 
     return DenseRetriever(cfg)
 
-def extract_answer(row) -> str:
+def extract_answer(row, cfg) -> str:
+    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
+        return row['answer']
+
     return row['output'][0]['answer']
 
-def extract_wikipedia_link(row) -> list[Paragraph]:
+def extract_references(row, cfg) -> list[Paragraph]:
+
+    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
+        paragraphs = []
+        for item in row['references']:
+            p = Paragraph(
+                document_id=item,
+                index=item
+            )
+
+            paragraphs.append(p)
+
+        return paragraphs
+
     paragraphs = []
     for item in row['output'][0]['provenance']:
         p = Paragraph(

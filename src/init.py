@@ -2,7 +2,7 @@ import logging
 import argparse
 from omegaconf import OmegaConf
 
-from knowledge_base import KnowledgeBase
+from knowledge_base import WikiKnowledgeBase, CatechismKnowledgeBase
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -17,7 +17,11 @@ def main():
 
     cfg = OmegaConf.load(args.config)
 
-    kb = KnowledgeBase(cfg)
+    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
+        kb = CatechismKnowledgeBase(cfg)
+    else:
+        kb = WikiKnowledgeBase(cfg)
+
     kb.init_database()
     kb.init_index()
 

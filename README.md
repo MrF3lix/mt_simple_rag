@@ -30,7 +30,8 @@ Next Steps
 - [ ] Common Input File Structure (Usable For multiple Tasks)
 - [ ] Fix unseen experiment
 - [ ] Index Entire Wiki
-- [ ] Sparse Index => BM25
+- [X] Sparse Index => BM25
+- [ ] Hybrid Index => Uses Sparse and Dense and Reranks the results
 - [ ] Use Compendium Dataset
 
 - [ ] Add Simple Statistics (Count per Label)

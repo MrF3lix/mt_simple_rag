@@ -1,0 +1,18 @@
+documents:
+  subset_size: 10
+  target: data/05_sparse/kilt_fever_train.jsonl
+knowledge_base:
+  wiki_source: data/wikipedia_kilt.duckdb
+  target: data/05_sparse/kilt_wiki.duckdb
+  use_subset: True
+embedder:
+  model: jinaai/jina-embeddings-v3
+  task: text-matching
+  query_task: retrieval.query
+index:
+  type: sparse
+  name: data/05_sparse/wiki_sparse
+  temp_file: data/05_sparse/paragraphs.jsonl
+retriever:
+  k: 5
+  strategy: dense

@@ -10,6 +10,7 @@ embedder:
   task: text-matching
   query_task: retrieval.query
 index:
+  batch_size: 1024
   type: sparse
   name: data/05_sparse/wiki_sparse
   temp_file: data/05_sparse/paragraphs.jsonl

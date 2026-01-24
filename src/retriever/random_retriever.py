@@ -15,6 +15,9 @@ class RandomRetriever(BaseRetriever):
 
 
         if 'dataset' in self.cfg.knowledge_base and self.cfg.knowledge_base.dataset == 'catechism':
+            if len(reference_documents) == 0:
+                reference_documents.append(-1)
+
             result = self.con.execute(f"""
                 SELECT *
                 FROM paragraph

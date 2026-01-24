@@ -37,7 +37,7 @@ class SimilarRetriever(BaseRetriever):
         result['d'] = distances[0]
 
         # TODO: Check if results contain the correct paragraph => Remove the reference paragraphs and return the top 5
-        result = result.loc[~result['index'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
+        result = result.loc[~result['global_id'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
 
         result = result.to_dict(orient='records')
 

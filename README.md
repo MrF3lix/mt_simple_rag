@@ -32,9 +32,11 @@ Next Steps
 - [ ] Index Entire Wiki
 - [X] Sparse Index => BM25
 - [ ] Hybrid Index => Uses Sparse and Dense and Reranks the results
-- [ ] Use Compendium Dataset
+- [X] Use Compendium Dataset
 
 - [ ] Add Simple Statistics (Count per Label)
+- [ ] Cleanup Code to work with both datasets
+- [ ] Select another task from the kilt benchmark
 
 
 

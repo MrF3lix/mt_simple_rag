@@ -17,13 +17,14 @@ def main():
 
     cfg = OmegaConf.load(args.config)
 
-    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
-        kb = CatechismKnowledgeBase(cfg)
-    else:
-        kb = WikiKnowledgeBase(cfg)
-
+    kb = load_knowledge_base(cfg)
     kb.init_database()
     kb.init_index()
 
+def load_knowledge_base(cfg):
+    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
+        return CatechismKnowledgeBase(cfg)
+    else:
+        return WikiKnowledgeBase(cfg)
 
 main()

@@ -4,7 +4,7 @@ from retriv import set_base_path, SparseRetriever as SparseRetrieverRetriv
 from pathlib import Path
 
 from .base_retriever import BaseRetriever
-from .query import Paragraph, Query
+from .query import Query
 
 class SparseRetriever(BaseRetriever):
 
@@ -35,12 +35,7 @@ class SparseRetriever(BaseRetriever):
 
         result = result.to_dict(orient='records')
 
-        query.retrieved = list(map(lambda r: Paragraph(
-            document_id=r['wikipedia_id'] if 'wikipedia_id' in r else r['global_id'],
-            global_id=r['global_id'],
-            index=r['index'] if 'index' in r else r['global_id'],
-            text=r['text'],
-        ), result))
+        query.retrieved = self.results_to_paragraphs(result)
 
         self.con.close()
 

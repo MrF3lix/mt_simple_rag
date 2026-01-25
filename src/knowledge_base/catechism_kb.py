@@ -16,13 +16,16 @@ class CatechismKnowledgeBase(KnowledgeBase):
 
         self.con.sql("DROP TABLE IF EXISTS paragraph")
 
-        self.con.execute(f"CREATE TABLE paragraph (global_id BIGINT, text VARCHAR);")
+        self.con.execute(f"CREATE TABLE paragraph (document_id VARCHAR, title VARCHAR, global_id BIGINT, index INTEGER, text VARCHAR);")
         self.con.execute(f"""
         INSERT INTO paragraph
         SELECT 
+            num AS document_id,
+            'TITLE' AS title,
             num AS global_id,
+            num AS index,
             text
-        FROM '{self.cfg.knowledge_base.source}'
+        FROM  '{self.cfg.knowledge_base.source}'
         """)
 
     def select_subset(self):

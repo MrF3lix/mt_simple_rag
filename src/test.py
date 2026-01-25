@@ -1,13 +1,13 @@
+import json
 import logging
 import argparse
-import pandas as pd
 from pathlib import Path
-from tqdm import tqdm
 from omegaconf import OmegaConf
 from datetime import datetime
 
 from retriever import DenseRetriever, SparseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
-from generator import Generator, Judge
+from generator import Generator
+from judge import DefaultJudge, LLMJudge
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -37,36 +37,33 @@ def main():
     logger.debug(f'Correct Paragraph:           {results['correct_paragraph'].sum() / len(results)}')
     logger.debug(f'Correct Answer:              {results['correct_answer'].sum() / len(results)}')
 
-    results.to_json(f'{report_path}/results.json', orient='records')
+    with open(f'{report_path}/results.json', 'w') as f:
+        json.dump(results, f)
 
 def run_test_queries(cfg):
     retriever = load_retriever(cfg)
     generator = Generator(cfg)
+    judge = load_judge(cfg)
 
-    if 'judge' in cfg:
-        judge = Judge(cfg)
-
-    df_q = pd.read_json(cfg.documents.target, lines=True)
     results = []
-    for _, row in tqdm(df_q.iterrows(), total=df_q.shape[0]):
-        query = Query(
-            id = str(row['id']),
-            input = str(row['input']),
-            answer = extract_answer(row, cfg),
-            generated_answer = None,
-            references = extract_references(row, cfg),
-            retrieved = []
-        )
+    with open(cfg.documents.target) as f:
+        for line in f:
+            row = json.loads(line)
+            query = Query.model_validate(row, )
 
-        query = retriever.retriev(query)
-        query = generator.generate(query)
+            query = retriever.retriev(query)
+            query = generator.generate(query)
+            query = judge.evaluate(query)
 
-        if 'judge' in cfg:
-            query = judge.eval(query)
+            results.append(query.compute_result())
 
-        results.append(query.compute_result())
+    return results
 
-    return pd.DataFrame(results)
+def load_judge(cfg):
+    if 'judge' in cfg:
+        return LLMJudge(cfg)
+
+    return DefaultJudge()
 
 def load_retriever(cfg):
     if cfg.retriever.strategy == 'random':
@@ -79,36 +76,5 @@ def load_retriever(cfg):
         return SparseRetriever(cfg)
 
     return DenseRetriever(cfg)
-
-def extract_answer(row, cfg) -> str:
-    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
-        return row['answer']
-
-    return row['output'][0]['answer']
-
-def extract_references(row, cfg) -> list[Paragraph]:
-
-    if 'dataset' in cfg.knowledge_base and cfg.knowledge_base.dataset == 'catechism':
-        paragraphs = []
-        for item in row['references']:
-            p = Paragraph(
-                document_id=item,
-                index=item
-            )
-
-            paragraphs.append(p)
-
-        return paragraphs
-
-    paragraphs = []
-    for item in row['output'][0]['provenance']:
-        p = Paragraph(
-            document_id=item['wikipedia_id'],
-            index=item['start_paragraph_id'] + 1
-        )
-        paragraphs.append(p)
-
-    return paragraphs
-
 
 main()

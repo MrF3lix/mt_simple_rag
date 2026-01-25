@@ -18,14 +18,14 @@ class WikiKnowledgeBase(KnowledgeBase):
 
         self.init_wiki_table()
 
-        self.con.sql("CREATE TABLE paragraph (wikipedia_id VARCHAR, wikipedia_title VARCHAR, global_id BIGINT, index INTEGER, text VARCHAR);")
+        self.con.sql("CREATE TABLE paragraph (document_id VARCHAR, title VARCHAR, global_id BIGINT, index INTEGER, text VARCHAR);")
         self.con.sql("CREATE SEQUENCE paragraph_id START 1;")
 
         self.con.execute("""
         INSERT INTO paragraph
         SELECT
-            wikipedia_id,
-            wikipedia_title,
+            wikipedia_id as document_id,
+            wikipedia_title as title,
             nextval('paragraph_id') as global_id,
             idx AS index,
             paragraph AS text
@@ -65,18 +65,25 @@ class WikiKnowledgeBase(KnowledgeBase):
         else:
             subset = train_clean
 
-        # TODO: This only extracts the first wikipedia_id
-        relevant = subset.map(self.extract_wikipedia_link)
-        relevant.to_json(self.cfg.documents.target)
-        # TODO: Change relevant to a common file format (Use Query DataType)
+        relevant = subset.map(self.extract_relevant_references)
 
-        return list(relevant['wikipedia_id'])
+        relevant.select_columns(['id', 'input', 'answer', 'references']).to_json(self.cfg.documents.target)
 
-    def extract_wikipedia_link(sef, row):
-        item = row['output'][0]['provenance'][0]
+        return list(map(lambda r: r[0]['document_id'], list(relevant['references'])))
+
+    def extract_relevant_references(self, row):
+        references = []
+        for ref in row['output'][0]['provenance']:
+            references.append({
+                'document_id': ref['wikipedia_id'],
+                'index': ref['start_paragraph_id'] + 1,
+                'global_id': None,
+                'text': None
+            })
 
         return {
-            'wikipedia_id': item['wikipedia_id']
+            'answer': row['output'][0]['answer'],
+            'references': references
         }
 
     def init_index(self):

@@ -4,7 +4,7 @@ import faiss
 import duckdb
 
 from .base_retriever import BaseRetriever
-from .query import Paragraph, Query
+from .query import Query
 
 class SimilarRetriever(BaseRetriever):
 
@@ -36,17 +36,9 @@ class SimilarRetriever(BaseRetriever):
             """.format(",".join(map(str, indices[0])))).df()
         result['d'] = distances[0]
 
-        # TODO: Check if results contain the correct paragraph => Remove the reference paragraphs and return the top 5
-        result = result.loc[~result['global_id'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
-
+        result = result.loc[~result['index'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
         result = result.to_dict(orient='records')
-
-        query.retrieved = list(map(lambda r: Paragraph(
-            document_id=r['wikipedia_id'] if 'wikipedia_id' in r else r['global_id'],
-            global_id=r['global_id'],
-            index=r['index'] if 'index' in r else r['global_id'],
-            text=r['text'],
-        ), result))
+        query.retrieved = self.results_to_paragraphs(result)
 
         return query
         

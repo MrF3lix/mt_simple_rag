@@ -13,34 +13,20 @@ class OracleRetriever(BaseRetriever):
     def retriev(self, query: Query) -> Query:
         reference_paragraphs = list(map(lambda p: p.index, query.references))
 
-        # TODO: Cleanup with common datastructure
-        if 'dataset' in self.cfg.knowledge_base and self.cfg.knowledge_base.dataset == 'catechism':
-            if len(reference_paragraphs) == 0:
-                # Reference is Empty so nothing can be retrieved.
-                return query
+        # Reference is Empty so nothing can be retrieved.
+        if len(reference_paragraphs) == 0:
+            return query
 
-            result = self.con.execute(f"""
-                SELECT *
-                FROM paragraph
-                WHERE global_id IN ({','.join(['?']*len(reference_paragraphs))})
-            """, reference_paragraphs).df()
-        else:
-            document_id = query.references[0].document_id
-
-            result = self.con.execute(f"""
-                SELECT *
-                FROM paragraph
-                WHERE wikipedia_id = '{document_id}' AND index IN ({','.join(['?']*len(reference_paragraphs))})
-            """, reference_paragraphs).df()
+        document_id = query.references[0].document_id
+        result = self.con.execute(f"""
+            SELECT *
+            FROM paragraph
+            WHERE document_id = '{document_id}' AND index IN ({','.join(['?']*len(reference_paragraphs))})
+        """, reference_paragraphs).df()
 
         result['d'] = 0
         result = result.to_dict(orient='records')
 
-        query.retrieved = list(map(lambda r: Paragraph(
-            document_id=r['wikipedia_id'] if 'wikipedia_id' in r else r['global_id'],
-            global_id=r['global_id'],
-            index=r['index'] if 'index' in r else r['global_id'],
-            text=r['text'],
-        ), result))
+        query.retrieved = self.results_to_paragraphs(result)
 
         return query

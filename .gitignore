@@ -8,3 +8,4 @@ __pycache__
 **/*.wal
 **/*.tmp
 **/*.npz
+start_vllm.submit

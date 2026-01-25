@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --partition=gpu_top
 #SBATCH --mem=250G
-#SBATCH --gres=gpu:h200sxm:1
+#SBATCH --gres=gpu:a100pcie:1
 #SBATCH --account=cai_exp
 #SBATCH --mail-user=saaf@zhaw.ch
 #SBATCH --output=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.out
@@ -16,5 +16,20 @@
 export UV_PROJECT_ENVIRONEMENT='/raid/persistent_scratch/saaf/venvs/mt_2'
 export UV_LINK_MODE=copy
 
-uv sync
+sig_handler_USR1()
+{
+    echo "++++++++++++++++++++++++++++++++++++++"
+    echo "STOP SIGNAL DETECTED - `date`"
+    echo "++++++++++++++++++++++++++++++++++++++"
+
+    echo "Requeuing job $SLURM_JOB_ID..."
+    scontrol requeue $SLURM_JOB_ID
+    exit 0
+}
+
+trap 'sig_handler_USR1' USR1
+
+# uv sync
+
+uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.0/flash_attn-2.8.3%2Bcu128torch2.9-cp312-cp312-linux_x86_64.whl
 uv run ./src/script/wikipedia_embeddings.py

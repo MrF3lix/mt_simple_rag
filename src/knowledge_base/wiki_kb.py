@@ -8,7 +8,7 @@ from index import DenseIndex, SparseIndex
 class WikiKnowledgeBase(KnowledgeBase):
     def __init__(self, cfg):
         self.cfg = cfg
-        self.index = DenseIndex(cfg) if cfg.index.type == 'dense' else SparseIndex(cfg)
+        self.index = DenseIndex(cfg) if 'dense' in cfg.index else SparseIndex(cfg)
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def init_database(self):

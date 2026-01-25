@@ -12,6 +12,6 @@ embedder:
   query_task: retrieval.query
 index:
   batch_size: 25
-  type: sparse
-  name: data/compendium/all/compendium_sparse
-  temp_file: data/compendium/paragraphs.jsonl
+  sparse:
+    path: data/compendium/all/compendium_sparse
+    temp_file: data/compendium/paragraphs.jsonl

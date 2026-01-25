@@ -13,7 +13,7 @@ class SimilarRetriever(BaseRetriever):
 
         self.cfg = cfg
         self.model = SentenceTransformer(cfg.embedder.model, trust_remote_code=True)
-        self.index = faiss.read_index(cfg.index.name)
+        self.index = faiss.read_index(cfg.index.dense.path)
         self.con = duckdb.connect(cfg.knowledge_base.target)
 
     def retriev(self, query: Query) -> Query:

@@ -12,7 +12,7 @@ class SparseRetriever(BaseRetriever):
         super().__init__()
         self.cfg = cfg
 
-        p = Path(cfg.index.name)
+        p = Path(cfg.index.sparse.path)
         set_base_path(str(p.parent))
 
         self.sr = SparseRetrieverRetriv.load(p.name)

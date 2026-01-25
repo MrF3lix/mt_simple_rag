@@ -21,4 +21,4 @@ class DenseIndex(BaseIndex):
         self.index.add(embeddings.astype("float32"))
 
     def save_index(self):
-        write_index(self.index, self.cfg.index.name)
+        write_index(self.index, self.cfg.index.dense.path)

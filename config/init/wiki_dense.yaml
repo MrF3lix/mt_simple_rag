@@ -12,8 +12,8 @@ embedder:
 index:
   dim: 1024
   batch_size: 25
-  type: dense
-  name: data/01_dense/kilt_wiki.index
+  dense:
+    path: data/01_dense/kilt_wiki.index
 retriever:
   k: 5
   strategy: dense

@@ -1,5 +1,5 @@
 documents:
-  subset_size: 10000
+  subset_size: 10
   target: data/05_sparse/kilt_fever_train.jsonl
 knowledge_base:
   source: data/wikipedia_kilt.duckdb
@@ -11,6 +11,6 @@ embedder:
   query_task: retrieval.query
 index:
   batch_size: 1024
-  type: sparse
-  name: data/05_sparse/wiki_sparse
-  temp_file: data/05_sparse/paragraphs.jsonl
+  sparse:
+    path: data/05_sparse/wiki_sparse
+    temp_file: data/05_sparse/paragraphs.jsonl

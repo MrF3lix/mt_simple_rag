@@ -4,7 +4,7 @@ import faiss
 import duckdb
 
 from .base_retriever import BaseRetriever
-from .query import Paragraph, Query
+from .query import Query
 
 class DenseRetriever(BaseRetriever):
 
@@ -13,7 +13,7 @@ class DenseRetriever(BaseRetriever):
 
         self.cfg = cfg
         self.model = SentenceTransformer(cfg.embedder.model, trust_remote_code=True)
-        self.index = faiss.read_index(cfg.index.name)
+        self.index = faiss.read_index(cfg.index.dense.path)
 
     def retriev(self, query: Query) -> Query:
         self.con = duckdb.connect(self.cfg.knowledge_base.target)

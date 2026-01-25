@@ -1,11 +1,12 @@
 import json
 import logging
 import argparse
+import pandas as pd
 from pathlib import Path
 from omegaconf import OmegaConf
 from datetime import datetime
 
-from retriever import DenseRetriever, SparseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, Query, Paragraph
+from retriever import DenseRetriever, SparseRetriever, OracleRetriever, RandomRetriever, SimilarRetriever, HybridRetriever, ProbabilisticRetriever, Query
 from generator import Generator
 from judge import DefaultJudge, LLMJudge
 
@@ -23,7 +24,7 @@ def main():
     cfg = OmegaConf.load(args.config)
 
     now = datetime.today().strftime('%Y-%m-%d_%H-%M')
-    report_path = f"results/{now}"
+    report_path = f"results/{now}_{cfg.name}"
     Path(report_path).mkdir(parents=True, exist_ok=True)
     logger.debug(f'Started {now}')
 
@@ -32,10 +33,11 @@ def main():
 
     results = run_test_queries(cfg)
 
-    logger.debug(f'Number of Test Queries:      {len(results)}')
-    logger.debug(f'Correct Documents:           {results['correct_document'].sum() / len(results)}')
-    logger.debug(f'Correct Paragraph:           {results['correct_paragraph'].sum() / len(results)}')
-    logger.debug(f'Correct Answer:              {results['correct_answer'].sum() / len(results)}')
+    df = pd.DataFrame(results)
+    logger.debug(f'Number of Test Queries:      {len(df)}')
+    logger.debug(f'Correct Documents:           {df['correct_document'].sum() / len(df)}')
+    logger.debug(f'Correct Paragraph:           {df['correct_paragraph'].sum() / len(df)}')
+    logger.debug(f'Correct Answer:              {df['correct_answer'].sum() / len(df)}')
 
     with open(f'{report_path}/results.json', 'w') as f:
         json.dump(results, f)
@@ -74,6 +76,10 @@ def load_retriever(cfg):
         return OracleRetriever(cfg)
     elif cfg.retriever.strategy == 'sparse':
         return SparseRetriever(cfg)
+    elif cfg.retriever.strategy == 'hybrid':
+        return HybridRetriever(cfg)
+    elif cfg.retriever.strategy == 'probabilistic':
+        return ProbabilisticRetriever(cfg)
 
     return DenseRetriever(cfg)
 

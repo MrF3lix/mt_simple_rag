@@ -8,7 +8,7 @@ class SparseIndex(BaseIndex):
     def __init__(self, cfg):
         self.cfg = cfg
 
-        p = Path(cfg.index.name)
+        p = Path(cfg.index.sparse.path)
         set_base_path(str(p.parent))
 
         self.sr = SparseRetriever(
@@ -26,7 +26,7 @@ class SparseIndex(BaseIndex):
         )
 
     def add_paragraphs(self, batch):
-        with open(self.cfg.index.temp_file, "a", encoding="utf-8") as f:
+        with open(self.cfg.index.sparse.temp_file, "a", encoding="utf-8") as f:
             for global_id, text in batch:
                 record = {
                     "global_id": global_id,
@@ -37,7 +37,7 @@ class SparseIndex(BaseIndex):
 
     def save_index(self):
         self.sr.index_file(
-            path=self.cfg.index.temp_file,
+            path=self.cfg.index.sparse.temp_file,
             show_progress=True,
             callback=lambda doc: {
                 "id": doc["global_id"],

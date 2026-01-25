@@ -11,8 +11,8 @@ embedder:
   task: text-matching
   query_task: retrieval.query
 index:
-  type: dense
-  name: data/compendium/all/compendium.index
+  dense:
+    path: data/compendium/all/compendium.index
   dim: 1024
   batch_size: 25
 retriever:

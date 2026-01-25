@@ -1,18 +1,18 @@
+name: fever_sparse
 documents:
-  target: data/01_dense/unseen.jsonl
+  target: data/05_sparse/kilt_fever_train.jsonl
 knowledge_base:
-  target: data/01_dense/kilt_wiki.duckdb
-embedder:
-  model: jinaai/jina-embeddings-v3
-  query_task: retrieval.query
+  target: data/05_sparse/kilt_wiki.duckdb
 index:
-  name: data/01_dense/kilt_wiki.index
+  sparse:
+    path: data/05_sparse/wiki_sparse
+    temp_file: data/05_sparse/paragraphs.jsonl
 retriever:
   k: 5
-  strategy: 'dense'
+  strategy: sparse
 generator:
   model: google/gemma-3-12b-it
-  base_url: http://trinity.zhaw.ch:8651/v1
+  base_url: http://sanjose.zhaw.ch:8651/v1
   temperature: 0.7
   max_tokens: 512
   system_prompt: >

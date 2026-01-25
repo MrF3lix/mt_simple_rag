@@ -1,3 +1,4 @@
+name: compendium_dense
 documents:
   target: data/compendium/all/compendium_train.jsonl
 knowledge_base:
@@ -7,8 +8,8 @@ embedder:
   model: jinaai/jina-embeddings-v3
   query_task: retrieval.query
 index:
-  type: dense
-  name: data/compendium/all/compendium.index
+  dense:
+    name: data/compendium/all/compendium.index
 retriever:
   k: 5
   strategy: dense

@@ -1,3 +1,4 @@
+import random
 from .base_retriever import BaseRetriever
 from .oracle_retriever import OracleRetriever
 from .random_retriever import RandomRetriever
@@ -12,5 +13,8 @@ class ProbabilisticRetriever(BaseRetriever):
         self.random = RandomRetriever(cfg)
 
     def retriev(self, query: Query) -> Query:
-        # TODO: Use the cfg.retriever.success_rate to determine wether to use the oracle or random retriever 
-        return self.oracle.retriev(query)
+        rate = random.uniform(0, 1)
+        if rate <= self.cfg.retriever.p:
+            return self.oracle.retriev(query)
+        
+        return self.random.retriev(query)

@@ -27,7 +27,7 @@
 
 
 Next Steps
-- [ ] Common Input File Structure (Usable For multiple Tasks)
+- [X] Common Input File Structure (Usable For multiple Tasks)
 - [ ] Fix unseen experiment
 - [ ] Index Entire Wiki
 - [X] Sparse Index => BM25
@@ -35,7 +35,7 @@ Next Steps
 - [X] Use Compendium Dataset
 
 - [ ] Add Simple Statistics (Count per Label)
-- [ ] Cleanup Code to work with both datasets
+- [X] Cleanup Code to work with both datasets
 - [ ] Select another task from the kilt benchmark
 
 

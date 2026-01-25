@@ -1,7 +1,7 @@
 import duckdb
 
 from .base_retriever import BaseRetriever
-from .query import Paragraph, Query
+from .query import Query
 
 class OracleRetriever(BaseRetriever):
     def __init__(self, cfg):

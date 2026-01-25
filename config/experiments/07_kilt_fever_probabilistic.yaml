@@ -1,19 +1,9 @@
 name: fever_probabilistic
+base: config/kilt_fever.yaml
 documents:
-  target: data/05_sparse/kilt_fever_train.jsonl
+  target: data/01_dense/kilt_fever_train.jsonl
 knowledge_base:
-  target: data/05_sparse/kilt_wiki.duckdb
+  target: data/01_dense/kilt_wiki.duckdb
 retriever:
-  k: 5
   p: 0.8
   strategy: probabilistic
-generator:
-  model: google/gemma-3-12b-it
-  base_url: http://sanjose.zhaw.ch:8651/v1
-  temperature: 0.7
-  max_tokens: 512
-  system_prompt: >
-    You are a master fact checker.
-    From given passages and a claim you can say whether the claim is SUPPORTS, REFUTES.
-    If the passages do not provide a clear answer you need to say "NOT ENOUGH INFO".
-    Only answer with one of the given labels: SUPPORTS, REFUTES, NOT ENOUGH INFO.

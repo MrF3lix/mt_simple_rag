@@ -1,33 +1,4 @@
 name: compendium_oracle
-documents:
-  target: data/compendium/all/compendium_train.jsonl
-knowledge_base:
-  dataset: catechism
-  target: data/compendium/all/catechism_kb.duckdb
-embedder:
-  model: jinaai/jina-embeddings-v3
-  query_task: retrieval.query
+base: config/compendium.yaml
 retriever:
-  k: 5
   strategy: oracle
-generator:
-  model: google/gemma-3-12b-it
-  base_url: http://sanjose.zhaw.ch:8651/v1
-  temperature: 0.7
-  max_tokens: 512
-  system_prompt: >
-    You are a theological export on the subject of the roman christian church.
-    You are given a question that you need to answer using the given passages.
-    Be very concise and don't include anything that is not in the given passages.
-judge:
-  model: google/gemma-3-12b-it
-  base_url: http://sanjose.zhaw.ch:8651/v1
-  temperature: 0.7
-  max_tokens: 512
-  system_prompt: >
-    You are given a question, the retrieved passages, the reference answer and a generated answer.
-    You need to judge whether the generated answer is similar the reference answer.
-
-    The answers are similar if they have the same core idea.
-
-    Answer with True or False only.

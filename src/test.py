@@ -2,6 +2,7 @@ import json
 import logging
 import argparse
 import pandas as pd
+from tqdm import tqdm
 from pathlib import Path
 from omegaconf import OmegaConf
 from datetime import datetime
@@ -22,6 +23,9 @@ def main():
     args = parser.parse_args()
 
     cfg = OmegaConf.load(args.config)
+    base = OmegaConf.load(cfg.base)
+
+    cfg = OmegaConf.merge(base, cfg)
 
     now = datetime.today().strftime('%Y-%m-%d_%H-%M')
     report_path = f"results/{now}_{cfg.name}"
@@ -47,11 +51,11 @@ def run_test_queries(cfg):
     generator = Generator(cfg)
     judge = load_judge(cfg)
 
+    num_queries = sum(1 for _ in open(cfg.documents.target))
     results = []
     with open(cfg.documents.target) as f:
-        for line in f:
-            row = json.loads(line)
-            query = Query.model_validate(row, )
+        for line in tqdm(f, total=num_queries):
+            query = Query.model_validate_json(line)
 
             query = retriever.retriev(query)
             query = generator.generate(query)

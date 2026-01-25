@@ -10,7 +10,6 @@ logger.addHandler(logging.StreamHandler())
 
 class Generator(BaseGenerator):
     def __init__(self, cfg):
-        logger.debug('Load Generator')
         self.cfg = cfg
 
         self.history = [

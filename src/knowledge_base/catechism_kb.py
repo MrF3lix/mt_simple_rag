@@ -33,8 +33,11 @@ class CatechismKnowledgeBase(KnowledgeBase):
         if 'subset_size' in self.cfg.documents:
             df = df.sample(self.cfg.documents.subset_size)
 
-        df['id'] = df['num']
+        df['id'] = df['num'].astype(str)
         df['input'] = df['question']
+        
+
+        df['references'] = df['references'].apply(lambda refs: list(map(lambda r: ({'document_id': r, 'index': r, 'global_id': None, 'text': None}), refs)))
 
         df[['id', 'input', 'answer', 'references']].to_json(self.cfg.documents.target, lines=True, orient='records')
 

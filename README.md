@@ -31,12 +31,12 @@ Next Steps
 - [ ] Fix unseen experiment
 - [ ] Index Entire Wiki
 - [X] Sparse Index => BM25
-- [ ] Hybrid Index => Uses Sparse and Dense and Reranks the results
+- [x] Hybrid Index => Uses Sparse and Dense and Reranks the results
 - [X] Use Compendium Dataset
 
 - [ ] Add Simple Statistics (Count per Label)
 - [X] Cleanup Code to work with both datasets
-- [ ] Select another task from the kilt benchmark
+- [ ] Select another task from the kilt benchmark => Natural Questions
 
 
 

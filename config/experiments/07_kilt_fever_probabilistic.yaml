@@ -1,9 +1,9 @@
 name: fever_probabilistic
 base: config/kilt_fever.yaml
 documents:
-  target: data/01_dense/kilt_fever_train.jsonl
+  target: data/07_probabilistic/kilt_fever_train.jsonl
 knowledge_base:
-  target: data/01_dense/kilt_wiki.duckdb
+  target: data/07_probabilistic/kilt_wiki.duckdb
 retriever:
   p: 0.8
   strategy: probabilistic

@@ -1,17 +1,12 @@
+name: nq_sparse
+base: config/kilt_nq.yaml
 documents:
-  subset_size: 10000
   target: data/nq/05_sparse/kilt_nq_train.jsonl
-  dataset: nq
 knowledge_base:
-  source: data/wikipedia_kilt.duckdb
   target: data/nq/05_sparse/kilt_wiki.duckdb
-  use_subset: True
-embedder:
-  model: jinaai/jina-embeddings-v3
-  task: text-matching
-  query_task: retrieval.query
 index:
-  batch_size: 1024
   sparse:
     path: data/nq/05_sparse/wiki_sparse
     temp_file: data/nq/05_sparse/paragraphs.jsonl
+retriever:
+  strategy: sparse

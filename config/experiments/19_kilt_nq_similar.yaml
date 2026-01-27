@@ -1,0 +1,11 @@
+name: nq_similar
+base: config/kilt_nq.yaml
+documents:
+  target: data/nq/04_similar/kilt_nq_train.jsonl
+knowledge_base:
+  target: data/nq/04_similar/kilt_wiki.duckdb
+index:
+  dense:
+    path: data/nq/04_similar/kilt_wiki.index
+retriever:
+  strategy: similar

@@ -1,0 +1,8 @@
+name: nq_oracle
+base: config/kilt_nq.yaml
+documents:
+  target: data/nq/02_oracle/kilt_nq_train.jsonl
+knowledge_base:
+  target: data/nq/02_oracle/kilt_wiki.duckdb
+retriever:
+  strategy: oracle

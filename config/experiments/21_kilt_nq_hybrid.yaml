@@ -1,0 +1,14 @@
+name: nq_hybrid
+base: config/kilt_nq.yaml
+documents:
+  target: data/nq/06_hybrid/kilt_nq_train.jsonl
+knowledge_base:
+  target: data/nq/06_hybrid/kilt_wiki.duckdb
+index:
+  dense: 
+    path: data/nq/06_hybrid/kilt_wiki.index
+  sparse:
+    path: data/nq/06_hybrid/wiki_sparse
+    temp_file: data/nq/06_hybrid/paragraphs.jsonl
+retriever:
+  strategy: hybrid

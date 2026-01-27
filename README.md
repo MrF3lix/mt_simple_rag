@@ -84,7 +84,7 @@ Next Steps
 - [X] Run 06_hybrid
 - [X] Run 07_probabilistic
 - [X] Create Wiki NQ Dense Index
-- [ ] Create Wiki NQ Sparse Index
+- [X] Create Wiki NQ Sparse Index
 
 
 
@@ -94,8 +94,9 @@ Next Steps
 - [X] Label Distribution
 - [ ] Unseen Experiment
 - [X] Figure out what is wrong with the Probabilistic Results
-- [ ] Run for WIKI_NQ KB
+- [X] Run for WIKI_NQ KB
 - [ ] Compendium in another Language => DE / ES
+- [ ] Fix Reranking in Hybrid
 
 
 - [X] RUN Fever probabilistic

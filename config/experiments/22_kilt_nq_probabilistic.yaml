@@ -1,0 +1,13 @@
+name: nq_probabilistic
+base: config/kilt_nq.yaml
+documents:
+  target: data/nq/07_probabilistic/kilt_nq_train.jsonl
+knowledge_base:
+  target: data/nq/07_probabilistic/kilt_wiki.duckdb
+index:
+  dense: 
+    path: data/nq/07_probabilistic/kilt_wiki.index
+retriever:
+  p: 0.8
+  strategy: probabilistic
+  alternative: similar

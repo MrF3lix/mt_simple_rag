@@ -1,0 +1,8 @@
+name: nq_random
+base: config/kilt_nq.yaml
+documents:
+  target: data/nq/03_random/kilt_nq_train.jsonl
+knowledge_base:
+  target: data/nq/03_random/kilt_wiki.duckdb
+retriever:
+  strategy: random

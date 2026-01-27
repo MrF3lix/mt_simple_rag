@@ -3,13 +3,14 @@ import numpy as np
 from tqdm import tqdm
 import faiss
 
-INDEX_FILE = "data/test.index"
+INDEX_FILE = "data/test_ivf.index"
 TARGET_DB = 'data/all.duckdb'
 DIM = 1024
 BATCH_SIZE = 1000
 NLIST = 65536
 NPROBE = 16
 NUM_THREADS = 15
+TRAINING_SIZE = 2_555_904
 
 faiss.omp_set_num_threads(NUM_THREADS)
 
@@ -27,8 +28,6 @@ index = faiss.IndexIVFFlat(
     faiss.METRIC_INNER_PRODUCT
 )
 
-# ---- train ----
-TRAINING_SIZE = 200_000
 train_batch = con.execute("""
     SELECT vec FROM paragraph
     WHERE has_vec = TRUE
@@ -40,7 +39,6 @@ index.train(train_embeddings)
 
 index.reserve(total)
 
-# ---- add ----
 pbar = tqdm(total=total)
 offset = 0
 

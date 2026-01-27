@@ -1,4 +1,4 @@
-name: compendium_sparse
+name: compendium_hybrid
 base: config/compendium.yaml
 index:
   dense:

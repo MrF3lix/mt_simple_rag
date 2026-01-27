@@ -1,10 +1,10 @@
 documents:
-  subset_size: 10
-  target: data/05_sparse/kilt_fever_train.jsonl
+  subset_size: 10000
+  target: data/nq/05_sparse/kilt_fever_train.jsonl
   dataset: fever
 knowledge_base:
   source: data/wikipedia_kilt.duckdb
-  target: data/05_sparse/kilt_wiki.duckdb
+  target: data/nq/05_sparse/kilt_wiki.duckdb
   use_subset: True
 embedder:
   model: jinaai/jina-embeddings-v3
@@ -13,5 +13,5 @@ embedder:
 index:
   batch_size: 1024
   sparse:
-    path: data/05_sparse/wiki_sparse
-    temp_file: data/05_sparse/paragraphs.jsonl
+    path: data/nq/05_sparse/wiki_sparse
+    temp_file: data/nq/05_sparse/paragraphs.jsonl

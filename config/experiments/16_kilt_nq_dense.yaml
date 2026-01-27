@@ -1,33 +1,11 @@
 name: nq_dense
-base: config/kilt_fever.yaml
+base: config/kilt_nq.yaml
 documents:
-  target: data/natural-questions/nq-train-kilt_fixed.jsonl
+  target: data/nq/01_dense/kilt_nq_train.jsonl
 knowledge_base:
-  target: data/01_dense/kilt_wiki.duckdb
+  target: data/nq/01_dense/kilt_wiki.duckdb
 index:
   dense: 
-    path: data/01_dense/kilt_wiki.index
+    path: data/nq/01_dense/kilt_wiki.index
 retriever:
   strategy: dense
-generator:
-  model: google/gemma-3-12b-it
-  base_url: http://sanjose.zhaw.ch:8651/v1
-  temperature: 0.7
-  max_tokens: 512
-  system_prompt: >
-    You are an expert in all kinds of questions.
-    Answer the users question given a list of retrieved paragraphs.
-    Only answer using the retrieved paragraphs.
-    If you do not know the answer say: I DO NOT KNOW.
-judge:
-  model: google/gemma-3-12b-it
-  base_url: http://sanjose.zhaw.ch:8651/v1
-  temperature: 0.7
-  max_tokens: 512
-  system_prompt: >
-    You are given a question, the retrieved paragraphs, the reference answer and a generated answer.
-    You need to judge whether the generated answer is similar the reference answer.
-
-    The answers are similar if they have the same core idea.
-
-    Answer with True or False only.

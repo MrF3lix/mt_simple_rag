@@ -54,24 +54,21 @@ class WikiKnowledgeBase(KnowledgeBase):
             """)
 
     def select_subset(self):
-        kilt_fever = load_dataset("kilt_tasks", name="fever")
-        allowed = ['SUPPORTS', 'REFUTES']
+        ds = load_dataset("facebook/kilt_tasks", name=self.cfg.documents.dataset)
+        ds = ds['train'].filter(lambda row: (len(row['output'][0]['provenance']) > 0))
 
-        train_clean = kilt_fever['train'].filter(lambda row: (row['output'][0]['answer'] in allowed and len(row['output'][0]['provenance']) > 0))
-
-        subset = train_clean.select(range(self.cfg.documents.subset_size))
+        subset = ds.select(range(self.cfg.documents.subset_size))
         if 'subset_size' in self.cfg.documents.keys():
-            subset = train_clean.select(range(self.cfg.documents.subset_size))
+            subset = ds.select(range(self.cfg.documents.subset_size))
         else:
-            subset = train_clean
+            subset = ds
 
-        relevant = subset.map(self.extract_relevant_references)
-
+        relevant = subset.map(self.extract_rows)
         relevant.select_columns(['id', 'input', 'answer', 'references']).to_json(self.cfg.documents.target)
 
         return list(map(lambda r: r[0]['document_id'], list(relevant['references'])))
 
-    def extract_relevant_references(self, row):
+    def extract_rows(self, row):
         references = []
         for ref in row['output'][0]['provenance']:
             references.append({

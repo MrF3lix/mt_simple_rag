@@ -4,6 +4,10 @@ documents:
   target: data/07_probabilistic/kilt_fever_train.jsonl
 knowledge_base:
   target: data/07_probabilistic/kilt_wiki.duckdb
+index:
+  dense: 
+    path: data/01_dense/kilt_wiki.index
 retriever:
   p: 0.8
   strategy: probabilistic
+  alternative: similar

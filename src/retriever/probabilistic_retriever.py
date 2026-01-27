@@ -11,12 +11,15 @@ class ProbabilisticRetriever(BaseRetriever):
         self.cfg = cfg
 
         self.oracle = OracleRetriever(cfg)
-        # self.random = RandomRetriever(cfg)
-        self.similar = RandomRetriever(cfg)
+        self.random = RandomRetriever(cfg)
+        self.similar = SimilarRetriever(cfg)
 
     def retriev(self, query: Query) -> Query:
         rate = random.uniform(0, 1)
         if rate <= self.cfg.retriever.p:
             return self.oracle.retriev(query)
         
-        return self.similar.retriev(query)
+        if self.cfg.retriever.alternative == 'similar':
+            return self.similar.retriev(query)
+
+        return self.random.retriev(query)

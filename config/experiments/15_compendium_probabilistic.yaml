@@ -1,5 +1,9 @@
 name: compendium_probabilistic
 base: config/compendium.yaml
+index:
+  dense:
+    path: data/compendium/all/compendium.index
 retriever:
   p: 0.8
   strategy: probabilistic
+  alternative: similar

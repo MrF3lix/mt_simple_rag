@@ -83,5 +83,20 @@ Next Steps
 - [X] Run 05_sparse
 - [X] Run 06_hybrid
 - [X] Run 07_probabilistic
-- [ ] Create Wiki NQ Dense Index
+- [X] Create Wiki NQ Dense Index
 - [ ] Create Wiki NQ Sparse Index
+
+
+
+## TODO 27.01.2026
+
+- [X] Send Label Counts to Pius
+- [X] Label Distribution
+- [ ] Unseen Experiment
+- [X] Figure out what is wrong with the Probabilistic Results
+- [ ] Run for WIKI_NQ KB
+- [ ] Compendium in another Language => DE / ES
+
+
+- [X] RUN Fever probabilistic
+- [X] RUN Compendium probabilistic

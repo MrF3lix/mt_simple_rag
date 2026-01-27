@@ -21,6 +21,7 @@ dependencies = [
     "pyarrow>=23.0.0",
     "pydantic>=2.12.5",
     "retriv>=0.2.3",
+    "scikit-learn>=1.8.0",
     "sentence-transformers>=5.2.0",
     "torch>=2.9.1",
     "tqdm>=4.67.1",

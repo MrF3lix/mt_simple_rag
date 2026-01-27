@@ -1,14 +1,14 @@
 name: fever_hybrid
 base: config/kilt_fever.yaml
 documents:
-  target: data/01_dense/kilt_fever_train.jsonl
+  target: data/06_hybrid/kilt_fever_train.jsonl
 knowledge_base:
-  target: data/01_dense/kilt_wiki.duckdb
+  target: data/06_hybrid/kilt_wiki.duckdb
 index:
   dense: 
-    path: data/01_dense/kilt_wiki.index
+    path: data/06_hybrid/kilt_wiki.index
   sparse:
-    path: data/05_sparse/wiki_sparse
-    temp_file: data/05_sparse/paragraphs.jsonl
+    path: data/06_hybrid/wiki_sparse
+    temp_file: data/06_hybrid/paragraphs.jsonl
 retriever:
   strategy: hybrid

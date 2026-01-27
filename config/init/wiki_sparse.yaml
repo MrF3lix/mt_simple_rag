@@ -1,5 +1,5 @@
 documents:
-  subset_size: 10
+  subset_size: 10000
   target: data/05_sparse/kilt_fever_train.jsonl
   dataset: fever
 knowledge_base:

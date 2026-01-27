@@ -15,7 +15,7 @@ class HybridRetriever(BaseRetriever):
     def retriev(self, query: Query) -> Query:
 
         query_sr = self.sparse.retriev(copy.deepcopy(query))
-        query_dr = self.sparse.retriev(copy.deepcopy(query))
+        query_dr = self.dense.retriev(copy.deepcopy(query))
 
         # TODO: Rerank the results and return the top K
         query.retrieved = query_sr.retrieved + query_dr.retrieved

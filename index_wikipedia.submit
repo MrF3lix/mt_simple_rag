@@ -4,9 +4,8 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=20
 #SBATCH --nodes=1
-#SBATCH --partition=gpu_top
-#SBATCH --mem=250G
-#SBATCH --gres=gpu:a100pcie:1
+#SBATCH --partition=cpu
+#SBATCH --mem=500G
 #SBATCH --account=cai_exp
 #SBATCH --mail-user=saaf@zhaw.ch
 #SBATCH --output=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.out
@@ -32,4 +31,4 @@ trap 'sig_handler_USR1' USR1
 # uv sync
 
 uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.0/flash_attn-2.8.3%2Bcu128torch2.9-cp312-cp312-linux_x86_64.whl
-uv run ./src/script/wikipedia_embeddings.py
+uv run ./src/script/wikipedia_index_ivf.py

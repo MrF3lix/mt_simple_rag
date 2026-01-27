@@ -60,3 +60,28 @@ Next Steps
 5. Run the LLM => vLLM Endpoint
 6.  Run the RAG API endpoint => RAG Endpoint
 7.  Run the Evaluation Pipeline
+
+
+
+## TODO
+
+- [X] Create Wiki Dense Index
+- [X] Create Wiki Sparse Index
+- [X] Run 01_dense
+- [X] Run 02_oracle
+- [X] Run 03_random
+- [X] Run 04_similar
+- [X] Run 05_sparse
+- [X] Run 06_hybrid
+- [X] Run 07_probabilistic
+- [X] Create Compendium Dense Index
+- [X] Create Compendium Sparse Index
+- [X] Run 01_dense
+- [X] Run 02_oracle
+- [X] Run 03_random
+- [X] Run 04_similar
+- [X] Run 05_sparse
+- [X] Run 06_hybrid
+- [X] Run 07_probabilistic
+- [ ] Create Wiki NQ Dense Index
+- [ ] Create Wiki NQ Sparse Index

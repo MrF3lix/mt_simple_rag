@@ -1,4 +1,4 @@
-name: compendium_sparse
+name: compendium_probabilistic
 base: config/compendium.yaml
 retriever:
   p: 0.8

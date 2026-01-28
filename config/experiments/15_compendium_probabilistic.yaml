@@ -1,4 +1,4 @@
-name: compendium_probabilistic
+name: compendium_probabilistic-random
 base: config/compendium.yaml
 index:
   dense:
@@ -6,4 +6,4 @@ index:
 retriever:
   p: 0.8
   strategy: probabilistic
-  alternative: similar
+  alternative: random

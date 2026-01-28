@@ -37,10 +37,11 @@ class LLMJudge(BaseJudge):
             max_tokens=self.cfg.generator.max_tokens
         )
 
-        eval_answer = response.choices[0].message.content
-        eval_answer = eval_answer.strip().split('.')[0].lower()
+        answer = response.choices[0].message.content
+        eval_answer = answer.strip().split('.')[0].lower()
 
         query.use_llm_judge = True
+        query.llm_judge_answer = answer
         query.is_answer_correct = True if eval_answer == "true" else False
 
         return query

@@ -1,0 +1,20 @@
+documents:
+  source: data/compendium/compendium_german.json
+  target: data/compendium/all/compendium_train.jsonl
+knowledge_base:
+  dataset: catechism
+  source: data/compendium/catechism_german.json
+  target: data/compendium/all/catechism_kb.duckdb
+  use_subset: False
+embedder:
+  model: jinaai/jina-embeddings-v3
+  task: text-matching
+  query_task: retrieval.query
+index:
+  dense:
+    path: data/compendium/all/compendium.index
+  dim: 1024
+  batch_size: 25
+retriever:
+  k: 5
+  strategy: dense

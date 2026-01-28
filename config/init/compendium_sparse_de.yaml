@@ -1,9 +1,9 @@
 documents:
-  source: data/compendium/compendium_english.json
+  source: data/compendium/compendium_german.json
   target: data/compendium/all/compendium_train.jsonl
 knowledge_base:
   dataset: catechism
-  source: data/compendium/catechism_english.jsonl
+  source: data/compendium/catechism_german.json
   target: data/compendium/all/catechism_kb.duckdb
   use_subset: False
 embedder:

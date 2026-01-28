@@ -92,10 +92,10 @@ Next Steps
 
 - [X] Send Label Counts to Pius
 - [X] Label Distribution
-- [ ] Unseen Experiment
 - [X] Figure out what is wrong with the Probabilistic Results
 - [X] Run for WIKI_NQ KB
-- [ ] Compendium in another Language => DE / ES
+- [X] Compendium in another Language => DE
+- [ ] Unseen Experiment
 - [ ] Fix Reranking in Hybrid
 
 

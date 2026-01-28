@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --time=1440
+#SBATCH --job-name=rag_eval_kb_init
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=20
+#SBATCH --nodes=1
+#SBATCH --partition=gpu 
+#SBATCH --mem=250G
+#SBATCH --gres=gpu:1
+#SBATCH --account=cai_exp
+#SBATCH --mail-user=saaf@zhaw.ch
+#SBATCH --output=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.out
+#SBATCH --error=/cluster/home/saaf/MT/mt_simple_rag/temp/%j_%N.err
+#SBATCH --signal=B:SIGUSR1@60
+
+export UV_PROJECT_ENVIRONEMENT='/raid/persistent_scratch/saaf/venvs/mt_2'
+export UV_LINK_MODE=copy
+
+
+uv run ./src/init.py --config config/init/compendium_dense_de.yaml
+uv run ./src/init.py --config config/init/compendium_sparse_de.yaml
+
+uv run ./src/test.py --config config/experiments/09_compendium_dense.yaml
+uv run ./src/test.py --config config/experiments/10_compendium_oracle.yaml
+uv run ./src/test.py --config config/experiments/11_compendium_random.yaml
+uv run ./src/test.py --config config/experiments/12_compendium_similar.yaml
+uv run ./src/test.py --config config/experiments/13_compendium_sparse.yaml
+uv run ./src/test.py --config config/experiments/14_compendium_hybrid.yaml
+uv run ./src/test.py --config config/experiments/15_compendium_probabilistic.yaml

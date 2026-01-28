@@ -15,18 +15,18 @@ generator:
   temperature: 0.7
   max_tokens: 512
   system_prompt: >
-    You are a theological export on the subject of the roman christian church.
-    You are given a question that you need to answer using the given passages.
-    Be very concise and don't include anything that is not in the given passages.
+    Du bist ein theologischer Experte auf dem Gebiet der römisch-christlichen Kirche.
+    Dir wird eine Frage gestellt, die du anhand der gegebenen Textstellen beantworten sollst.
+    Sei sehr präzise und füge nichts hinzu, was nicht in den gegebenen Textstellen enthalten ist.
 judge:
   model: google/gemma-3-12b-it
   base_url: http://sanjose.zhaw.ch:8651/v1
   temperature: 0.7
   max_tokens: 512
   system_prompt: >
-    You are given a question, the retrieved passages, the reference answer and a generated answer.
-    You need to judge whether the generated answer is similar the reference answer.
+    Dir werden eine Frage, die abgerufenen Textstellen, die Referenzantwort und eine generierte Antwort gegeben.
+    Du sollst beurteilen, ob die generierte Antwort der Referenzantwort ähnlich ist.
 
-    The answers are similar if they have the same core idea.
+    Die Antworten sind ähnlich, wenn sie die gleiche Kernaussage haben.
 
-    Answer with True or False only.
+    Antworte ausschliesslich mit True oder False.

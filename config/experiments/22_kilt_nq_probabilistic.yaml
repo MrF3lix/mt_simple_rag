@@ -10,4 +10,4 @@ index:
 retriever:
   p: 0.8
   strategy: probabilistic
-  alternative: similar
+  alternative: random

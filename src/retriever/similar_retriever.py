@@ -26,19 +26,30 @@ class SimilarRetriever(BaseRetriever):
             prompt_name=self.cfg.embedder.query_task,
         )
 
-        distances, indices = self.index.search(np.array([query_embedding]), self.cfg.retriever.k * multiplier)
-        indices = indices+1 # Indices in duckdb start at 1 while indices in the faiss index start at 0
 
-        result = self.con.execute("""
-            SELECT *
-            FROM paragraph
-            WHERE global_id IN ({})
-            """.format(",".join(map(str, indices[0])))).df()
-        result['d'] = distances[0]
+        while True:
+            distances, indices = self.index.search(np.array([query_embedding]), self.cfg.retriever.k * multiplier)
+            indices = indices+1 # Indices in duckdb start at 1 while indices in the faiss index start at 0
 
-        result = result.loc[~result['index'].isin(reference_paragraphs)].head(self.cfg.retriever.k)
-        result = result.to_dict(orient='records')
-        query.retrieved = self.results_to_paragraphs(result)
+            result = self.con.execute("""
+                SELECT *
+                FROM paragraph
+                WHERE global_id IN ({})
+                """.format(",".join(map(str, indices[0])))).df()
+            result['d'] = distances[0]
+
+            result = result.loc[~result['index'].isin(reference_paragraphs)]
+
+            if len(result) >= self.cfg.retriever.k:
+                result = result.head(self.cfg.retriever.k)
+                result = result.to_dict(orient='records')
+                query.retrieved = self.results_to_paragraphs(result)
+                break
+            else:
+                multiplier += 1
+
+            if multiplier > 7:
+                break
 
         return query
         
